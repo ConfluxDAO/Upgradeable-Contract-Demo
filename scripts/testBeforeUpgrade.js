@@ -1,16 +1,17 @@
 const hre = require("hardhat");
 
 async function main() {
-  const proxyAddress = 'YOUR_PROXY_ADDRESS_HERE';
+  const proxyAddress = '0x24C91c9cE0C8bC4b509B20D120224a454a2850cE';
 
-  const SimpleUpgrade = await hre.ethers.getContractFactory("SimpleUpgrade");
-  const proxy = SimpleUpgrade.attach(proxyAddress);
-
+  // Use Logic2's ABI
   const Logic1 = await hre.ethers.getContractFactory("Logic1");
-  const logic1 = Logic1.attach(proxyAddress);
+  // Attach to the Logic1 contract using the proxy address
+  const proxy = Logic1.attach(proxyAddress);
 
   // Call the foo function
-  await logic1.foo();
+  const tx = await proxy.foo();
+  console.log("Waiting for on-chain confirmation...");
+  await tx.wait(); // Wait for on-chain confirmation
 
   // Get and print the value of the words variable
   const words = await proxy.words();
